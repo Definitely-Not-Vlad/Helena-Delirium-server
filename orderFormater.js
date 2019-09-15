@@ -17,6 +17,7 @@ exports.formatOrder = function (order) {
 
   Products ordered:
     ${productList}
+
   Total price: ${order.total}`;
 
   return finalOrder;
