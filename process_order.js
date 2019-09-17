@@ -1,21 +1,16 @@
 var http = require('http');
 var bodyParser = require('body-parser');
 var nodemailer = require('nodemailer');
-var formater = require('./orderFormater');
 
-// keep these empty when committing, shouldn't exactly
-// be public knowledge
-const SERVICE_EMAIL = '';
-const SERVICE_PASSWORD = '';
-const SERVICE_TARGET_EMAIL = '';
-const MAIL_SERVICE = 'gmail';
+var creds = require('./credentials');
+var formater = require('./orderFormater');
 
 const jsonParser = bodyParser.json();
 const transporter = nodemailer.createTransport({
-  service: MAIL_SERVICE,
+  service: creds.mailService,
   auth: {
-    user: SERVICE_EMAIL,
-    pass: SERVICE_PASSWORD
+    user: creds.serviceEmail,
+    pass: creds.servicePassword
   }
 });
 
@@ -24,8 +19,8 @@ const requestHandler = (req, res) => {
     jsonParser(req, res, (error) => {
       const formattedOrder = formater.formatOrder(req.body);
       const mailOptions = {
-        from: SERVICE_EMAIL,
-        to: SERVICE_TARGET_EMAIL,
+        from: creds.serviceEmail,
+        to: creds.serviceTargetEmail,
         subject: `New order from ${req.body.customerName}`,
         text: formattedOrder
       };
@@ -41,6 +36,7 @@ const requestHandler = (req, res) => {
       });
     });
   }
+  res.end();
 }
 
 const server = http.createServer(requestHandler);
