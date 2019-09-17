@@ -1,5 +1,8 @@
 package_lock.json
 
+# Ignoring credentials for privacy and security
+credentials.json
+
 # Logs
 logs
 *.log
